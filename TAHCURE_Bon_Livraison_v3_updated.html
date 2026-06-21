@@ -1,0 +1,776 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<title>TAHCURE - Bon de Livraison</title>
+<style>
+/* === RESET UNIVERSEL === */
+* { -webkit-box-sizing:border-box; box-sizing:border-box; margin:0; padding:0; }
+html, body { width:100%; }
+body {
+  font-family: -apple-system, 'Helvetica Neue', Arial, sans-serif;
+  background: #F5F0E8;
+  padding: 12px 10px 60px;
+  font-size: 14px;
+  color: #1A1A1A;
+  -webkit-text-size-adjust: 100%;
+}
+
+/* === HEADER === */
+.header {
+  background: #8B1A2B;
+  border-radius: 10px 10px 0 0;
+  padding: 14px 16px;
+  overflow: hidden;
+}
+.header-top { overflow: hidden; }
+.brand { font-size: 20px; font-weight: bold; color: #fff; float: left; }
+.bon-ref {
+  float: right;
+  background: rgba(255,255,255,0.18);
+  color: #F5D98B;
+  font-size: 11px;
+  font-weight: bold;
+  padding: 4px 10px;
+  border-radius: 5px;
+}
+.brand-sub { font-size: 11px; color: rgba(255,255,255,0.6); clear: both; padding-top: 2px; }
+
+/* === CARD === */
+.card {
+  background: #fff;
+  border-radius: 0 0 10px 10px;
+  padding-bottom: 16px;
+  -webkit-box-shadow: 0 2px 8px rgba(0,0,0,0.10);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.10);
+}
+
+/* === SECTIONS === */
+.sec-label {
+  font-size: 10px;
+  font-weight: bold;
+  letter-spacing: 0.12em;
+  color: #999;
+  text-transform: uppercase;
+  padding: 16px 16px 8px;
+}
+.field { padding: 0 16px 12px; }
+.field label { display: block; font-size: 13px; color: #555; margin-bottom: 5px; font-weight: 500; }
+
+/* === INPUTS — taille 16px pour éviter le zoom iOS === */
+.field input,
+.field textarea {
+  width: 100%;
+  font-size: 16px;
+  color: #1A1A1A;
+  background: #FAF8F5;
+  border: 1px solid #CBBBAE;
+  border-radius: 8px;
+  padding: 11px 13px;
+  outline: none;
+  -webkit-appearance: none;
+  appearance: none;
+  display: block;
+}
+.field textarea { resize: none; height: 70px; line-height: 1.5; }
+
+/* === DATE/HEURE en texte simple (universel) === */
+.field input[type="text"].date-input { letter-spacing: 0.05em; }
+
+/* === DIVIDER === */
+.divider { height: 1px; background: #EEE8E2; margin: 0; }
+
+/* === PRODUITS === */
+.prod-row {
+  padding: 10px 16px;
+  border-bottom: 1px solid #F0EAE5;
+  overflow: hidden;
+}
+.prod-row:last-child { border-bottom: none; }
+.prod-left { float: left; width: 65%; }
+.prod-right { float: right; width: 35%; text-align: right; }
+.prod-name { font-size: 13px; font-weight: bold; color: #1A1A1A; line-height: 1.3; }
+.prod-price { font-size: 11px; color: #C9973A; margin-top: 2px; }
+.prod-check-row { margin-top: 4px; }
+
+/* Checkbox custom universel */
+.chk-wrap { display: inline-block; cursor: pointer; }
+.chk-box {
+  display: inline-block;
+  width: 20px; height: 20px;
+  border: 2px solid #CBBBAE;
+  border-radius: 5px;
+  background: #FAF8F5;
+  vertical-align: middle;
+  text-align: center;
+  line-height: 16px;
+  font-size: 13px;
+  color: transparent;
+  -webkit-transition: all 0.1s;
+  transition: all 0.1s;
+}
+.chk-box.on { background: #8B1A2B; border-color: #8B1A2B; color: #fff; }
+
+/* Boutons quantite */
+.qty-wrap { display: inline-block; vertical-align: middle; white-space: nowrap; }
+.qty-btn {
+  display: inline-block;
+  width: 30px; height: 30px;
+  background: #fff;
+  border: 1px solid #CBBBAE;
+  border-radius: 7px;
+  font-size: 20px;
+  line-height: 28px;
+  text-align: center;
+  color: #333;
+  cursor: pointer;
+  vertical-align: middle;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-user-select: none;
+  user-select: none;
+}
+.qty-val {
+  display: inline-block;
+  width: 24px;
+  font-size: 15px;
+  font-weight: bold;
+  text-align: center;
+  vertical-align: middle;
+}
+.clearfix:after { content: ""; display: table; clear: both; }
+
+/* === HEURE CHIPS === */
+.chips { padding: 0 16px; overflow: hidden; }
+.chip {
+  float: left;
+  width: 48%;
+  margin: 0 1% 8px;
+  border: 1px solid #CBBBAE;
+  border-radius: 8px;
+  padding: 10px 6px;
+  text-align: center;
+  font-size: 13px;
+  font-weight: bold;
+  color: #666;
+  cursor: pointer;
+  background: #fff;
+  -webkit-tap-highlight-color: transparent;
+}
+.chip.on { border-color: #8B1A2B; background: #FDF0F2; color: #8B1A2B; }
+.chip-sub { font-size: 10px; font-weight: normal; opacity: 0.65; display: block; margin-top: 2px; }
+
+/* === TOTAL BAR === */
+.total-bar {
+  margin: 8px 16px;
+  background: #FAF8F5;
+  border-radius: 8px;
+  padding: 12px 14px;
+  border: 1px solid #CBBBAE;
+  overflow: hidden;
+}
+.total-left { float: left; }
+.total-right { float: right; text-align: right; }
+.total-label { font-size: 12px; color: #888; }
+.total-amount { font-size: 20px; font-weight: bold; color: #8B1A2B; }
+.total-fcfa { font-size: 11px; color: #C9973A; font-weight: bold; }
+.total-count { font-size: 12px; color: #888; }
+
+/* === ERREURS === */
+.err { font-size: 12px; color: #A32D2D; padding: 3px 16px 6px; display: none; }
+.err.on { display: block; }
+.req { color: #8B1A2B; }
+
+/* === BOUTON PRINCIPAL === */
+.btn-gen {
+  display: block;
+  width: calc(100% - 32px);
+  margin: 16px 16px 0;
+  background: #8B1A2B;
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  padding: 15px;
+  font-size: 16px;
+  font-weight: bold;
+  text-align: center;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+.btn-gen:active { background: #6D0E1F; }
+
+/* === RECAP === */
+.recap {
+  display: none;
+  margin: 14px 16px 0;
+  background: #F0FBF5;
+  border-radius: 10px;
+  padding: 14px;
+  border-left: 4px solid #3D6B27;
+}
+.recap.on { display: block; }
+.recap-title { font-size: 11px; font-weight: bold; color: #3D6B27; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 10px; }
+.recap-row { font-size: 13px; color: #1A1A1A; padding: 5px 0; border-bottom: 1px solid rgba(61,107,39,0.12); overflow: hidden; }
+.recap-row:last-child { border-bottom: none; }
+.recap-key { float: left; color: #666; width: 85px; font-size: 12px; }
+.recap-val { margin-left: 90px; }
+.recap-total-box {
+  background: #fff;
+  border-radius: 8px;
+  padding: 10px 12px;
+  margin-top: 10px;
+  overflow: hidden;
+  border: 1px solid rgba(61,107,39,0.2);
+}
+.recap-total-label { float: left; font-size: 12px; color: #3D6B27; font-weight: bold; line-height: 28px; }
+.recap-total-val { float: right; font-size: 22px; font-weight: bold; color: #8B1A2B; }
+
+/* === TEXTAREA DU BON (copie manuelle) === */
+.bon-textarea {
+  width: 100%;
+  font-family: monospace;
+  font-size: 12px;
+  color: #1A1A1A;
+  background: #fff;
+  border: 1px solid #CBBBAE;
+  border-radius: 8px;
+  padding: 10px;
+  margin-top: 10px;
+  height: 220px;
+  resize: none;
+  -webkit-appearance: none;
+  display: block;
+}
+.copy-hint { font-size: 11px; color: #3D6B27; margin-top: 6px; font-style: italic; }
+
+.btn-copy {
+  display: block;
+  width: 100%;
+  margin-top: 10px;
+  background: transparent;
+  border: 1px solid #3D6B27;
+  border-radius: 10px;
+  padding: 12px;
+  font-size: 14px;
+  font-weight: bold;
+  color: #3D6B27;
+  text-align: center;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+.btn-copy.done { background: #EEF5E8; }
+.btn-new {
+  display: block;
+  width: 100%;
+  margin-top: 8px;
+  background: transparent;
+  border: 1px solid #DDD;
+  border-radius: 10px;
+  padding: 11px;
+  font-size: 14px;
+  color: #888;
+  text-align: center;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="header">
+  <div class="header-top clearfix">
+    <div class="brand">TAHCURE</div>
+    <div class="bon-ref" id="bon-ref">BL-0001</div>
+  </div>
+  <div class="brand-sub">Tisanes Medicinales &mdash; Bon de livraison</div>
+</div>
+
+<div class="card">
+
+  <!-- STAGIAIRE -->
+  <div class="sec-label">Stagiaire</div>
+  <div class="field">
+    <label>Nom du stagiaire <span class="req">*</span></label>
+    <input type="text" id="stagiaire" placeholder="Votre nom complet" autocomplete="name" autocorrect="off">
+  </div>
+  <div class="err" id="err-stagiaire">Veuillez saisir votre nom.</div>
+
+  <div class="divider"></div>
+
+  <!-- DATE : champ texte simple, pas type="date" -->
+  <div class="sec-label">Date de livraison</div>
+  <div class="field">
+    <label>Date <span class="req">*</span> <span style="font-size:11px;color:#999;">(format JJ/MM/AAAA)</span></label>
+    <input type="text" id="date-livraison" placeholder="20/06/2026" inputmode="numeric" maxlength="10" autocomplete="off">
+  </div>
+  <div class="err" id="err-date">Veuillez saisir la date (JJ/MM/AAAA).</div>
+
+  <div class="divider"></div>
+
+  <!-- PAIEMENT -->
+  <div class="sec-label">Paiement Orange Money</div>
+  <div class="field">
+    <label>Code de transaction OM <span class="req">*</span></label>
+    <input type="text" id="code-om" placeholder="Ex: CM2412345678" autocomplete="off" autocorrect="off" autocapitalize="characters" spellcheck="false">
+  </div>
+  <div class="err" id="err-om">Veuillez saisir le code OM.</div>
+
+  <div class="divider"></div>
+
+  <!-- PRODUITS -->
+  <div class="sec-label">Produits commandes <span class="req">*</span></div>
+  <div id="prod-list"><!-- JS --></div>
+  <div class="err" id="err-prod">Selectionnez au moins un produit.</div>
+
+  <!-- TOTAL -->
+  <div class="total-bar clearfix">
+    <div class="total-left">
+      <div class="total-label">Total commande</div>
+      <div class="total-count" id="total-count">0 article</div>
+    </div>
+    <div class="total-right">
+      <div class="total-amount" id="total-amount">0</div>
+      <div class="total-fcfa">FCFA</div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- CLIENT -->
+  <div class="sec-label">Client destinataire</div>
+  <div class="field">
+    <label>Telephone du client <span class="req">*</span></label>
+    <input type="tel" id="tel-client" placeholder="6XX XX XX XX" inputmode="tel" autocomplete="tel">
+  </div>
+  <div class="err" id="err-tel">Veuillez saisir le numero du client.</div>
+
+  <div class="divider"></div>
+
+  <!-- HEURE -->
+  <div class="sec-label">Heure de livraison souhaitee <span class="req">*</span></div>
+  <div class="chips clearfix" id="chips">
+    <div class="chip" onclick="selHeure(this)" data-h="Matin (7h-10h)">Matin<span class="chip-sub">7h - 10h</span></div>
+    <div class="chip" onclick="selHeure(this)" data-h="Mi-journee (10h-13h)">Mi-journee<span class="chip-sub">10h - 13h</span></div>
+    <div class="chip" onclick="selHeure(this)" data-h="Apres-midi (13h-17h)">Apres-midi<span class="chip-sub">13h - 17h</span></div>
+    <div class="chip" onclick="selHeure(this)" data-h="Soir (17h-20h)">Soir<span class="chip-sub">17h - 20h</span></div>
+  </div>
+  <div class="err" id="err-heure">Veuillez choisir une plage horaire.</div>
+
+  <div class="divider"></div>
+
+  <!-- LIEU -->
+  <div class="sec-label">Lieu de livraison</div>
+  <div class="field">
+    <label>Adresse / Quartier / Point de repere <span class="req">*</span></label>
+    <textarea id="lieu" placeholder="Ex: Bastos, derriere la pharmacie du coin..."></textarea>
+  </div>
+  <div class="err" id="err-lieu">Veuillez indiquer le lieu de livraison.</div>
+
+  <div class="field" style="padding-top:0">
+    <label>Notes pour le livreur (optionnel)</label>
+    <textarea id="notes" placeholder="Ex: appeler avant d'arriver..." style="height:54px"></textarea>
+  </div>
+
+  <!-- BOUTON -->
+  <button class="btn-gen" onclick="generer()">Generer le bon de livraison</button>
+
+  <!-- RECAP -->
+  <div class="recap" id="recap">
+    <div class="recap-title">BON DE LIVRAISON GENERE</div>
+    <div id="recap-content"><!-- JS --></div>
+    <div class="recap-total-box clearfix">
+      <div class="recap-total-label">Total a encaisser</div>
+      <div class="recap-total-val" id="recap-total">0 FCFA</div>
+    </div>
+
+    <!-- TEXTAREA POUR COPIE — SOLUTION LA PLUS FIABLE SUR TOUS LES TELEPHONES -->
+    <textarea class="bon-textarea" id="bon-textarea" readonly onclick="this.select(); this.setSelectionRange(0,99999);"></textarea>
+    <div class="copy-hint">Appuyez sur le texte ci-dessus, puis Tout selectionner -> Copier, et collez dans WhatsApp.</div>
+
+    <button class="btn-copy" id="btn-copy" onclick="copier()">Copier le bon</button>
+    <button class="btn-new" onclick="nouveau()">Nouveau bon</button>
+  </div>
+
+</div><!-- /card -->
+
+<script>
+/* ============================================================
+   TAHCURE BON DE LIVRAISON v3
+   Architecture universelle : ES3-compatible, zero APIs modernes
+   Compatible : Android 4+, iPhone iOS 8+, WebView WhatsApp
+   ============================================================ */
+
+var PRODUITS = [
+  {nom:"Anti-Grippe / Anti-Flu",       prix:2500},
+  {nom:"Artemisia",                    prix:2500},
+  {nom:"Ekouk - Contre les douleurs",  prix:2000},
+  {nom:"Essok - Troubles digestifs",   prix:2000},
+  {nom:"Eucalyptus Globulus",          prix:2000},
+  {nom:"Happy Menopause",              prix:2500},
+  {nom:"Lemongrass / Citronnelle",     prix:2000},
+  {nom:"Menthe Poivree",               prix:2000},
+  {nom:"Moringa",                      prix:2000},
+  {nom:"Oseille / Folere (Bissap)",    prix:2000},
+  {nom:"Paludisme",                    prix:2500},
+  {nom:"Prunus Africana",              prix:2500},
+  {nom:"Sommeil Paisible",             prix:2500},
+  {nom:"Stevia - Sucre naturel",       prix:2000},
+  {nom:"The Vert",                     prix:2000},
+  {nom:"Yohimbe",                      prix:2500}
+];
+
+/* Etat global */
+var qtys = [];
+var heure = '';
+var bonTxt = '';
+var compteur = 1;
+
+/* Initialisation compteur — try/catch total */
+(function() {
+  try {
+    var v = localStorage.getItem('tahcure_cpt');
+    if (v) compteur = parseInt(v, 10) + 1;
+  } catch(e) { compteur = 1; }
+})();
+
+/* Init des quantites */
+for (var k = 0; k < PRODUITS.length; k++) { qtys[k] = 0; }
+
+/* Afficher ref */
+function padNum(n) {
+  var s = '' + n;
+  while (s.length < 4) s = '0' + s;
+  return s;
+}
+document.getElementById('bon-ref').innerHTML = 'BL-' + padNum(compteur);
+
+/* Date du jour en JJ/MM/AAAA */
+(function() {
+  var d = new Date();
+  var j = d.getDate();
+  var m = d.getMonth() + 1;
+  var a = d.getFullYear();
+  document.getElementById('date-livraison').value =
+    (j < 10 ? '0'+j : j) + '/' + (m < 10 ? '0'+m : m) + '/' + a;
+})();
+
+/* Formater nombre — sans toLocaleString (bugue sur vieux Android) */
+function fmt(n) {
+  var s = '' + Math.round(n);
+  var res = '';
+  var count = 0;
+  for (var i = s.length - 1; i >= 0; i--) {
+    if (count > 0 && count % 3 === 0) res = ' ' + res;
+    res = s[i] + res;
+    count++;
+  }
+  return res;
+}
+
+/* Construire la liste produits */
+(function() {
+  var list = document.getElementById('prod-list');
+  var html = '';
+  for (var i = 0; i < PRODUITS.length; i++) {
+    var p = PRODUITS[i];
+    html += '<div class="prod-row clearfix" id="row-' + i + '">';
+    html += '<div class="prod-left">';
+    html += '<div class="prod-name">' + p.nom + '</div>';
+    html += '<div class="prod-price">' + fmt(p.prix) + ' FCFA / boite</div>';
+    html += '<div class="prod-check-row">';
+    /* Checkbox avec onclick inline — le plus compatible */
+    html += '<span class="chk-wrap" onclick="toggleChk(' + i + ')">';
+    html += '<span class="chk-box" id="chk-' + i + '">v</span>';
+    html += '</span>';
+    html += '</div>';
+    html += '</div>';
+    html += '<div class="prod-right">';
+    html += '<div class="qty-wrap">';
+    html += '<span class="qty-btn" onclick="chgQty(' + i + ',-1)">&#8722;</span>';
+    html += '<span class="qty-val" id="qv-' + i + '">0</span>';
+    html += '<span class="qty-btn" onclick="chgQty(' + i + ',1)">+</span>';
+    html += '</div>';
+    html += '</div>';
+    html += '</div>';
+  }
+  list.innerHTML = html;
+})();
+
+function toggleChk(i) {
+  if (qtys[i] === 0) {
+    qtys[i] = 1;
+  } else {
+    qtys[i] = 0;
+  }
+  rafraichirProd(i);
+  majTotal();
+}
+
+function chgQty(i, d) {
+  var q = qtys[i] + d;
+  if (q < 0) q = 0;
+  qtys[i] = q;
+  rafraichirProd(i);
+  majTotal();
+}
+
+function rafraichirProd(i) {
+  var el = document.getElementById('chk-' + i);
+  var qv = document.getElementById('qv-' + i);
+  if (qtys[i] > 0) {
+    el.className = 'chk-box on';
+  } else {
+    el.className = 'chk-box';
+  }
+  qv.innerHTML = '' + qtys[i];
+}
+
+function majTotal() {
+  var total = 0;
+  var items = 0;
+  for (var i = 0; i < PRODUITS.length; i++) {
+    total += PRODUITS[i].prix * qtys[i];
+    items += qtys[i];
+  }
+  document.getElementById('total-amount').innerHTML = fmt(total);
+  document.getElementById('total-count').innerHTML = items + (items <= 1 ? ' article' : ' articles');
+}
+
+function selHeure(chip) {
+  var chips = document.getElementById('chips').childNodes;
+  for (var i = 0; i < chips.length; i++) {
+    if (chips[i].className) {
+      chips[i].className = chips[i].className.replace(' on','').replace('on','');
+    }
+  }
+  chip.className += ' on';
+  heure = chip.getAttribute('data-h');
+}
+
+/* ---- VALIDATION ---- */
+function valider() {
+  var ok = true;
+
+  function chk(id, errId) {
+    var el = document.getElementById(id);
+    var er = document.getElementById(errId);
+    var v = el.value.replace(/\s/g,'');
+    if (!v) { er.className = 'err on'; ok = false; }
+    else { er.className = 'err'; }
+  }
+
+  chk('stagiaire','err-stagiaire');
+  chk('date-livraison','err-date');
+  chk('code-om','err-om');
+  chk('tel-client','err-tel');
+  chk('lieu','err-lieu');
+
+  /* Produits */
+  var hasProd = false;
+  for (var i = 0; i < PRODUITS.length; i++) { if (qtys[i] > 0) { hasProd = true; break; } }
+  var ep = document.getElementById('err-prod');
+  if (!hasProd) { ep.className = 'err on'; ok = false; } else { ep.className = 'err'; }
+
+  /* Heure */
+  var eh = document.getElementById('err-heure');
+  if (!heure) { eh.className = 'err on'; ok = false; } else { eh.className = 'err'; }
+
+  return ok;
+}
+
+/* ---- GENERATION ---- */
+function generer() {
+  if (!valider()) {
+    /* Scroll vers premier champ vide — compatible tous phones */
+    var first = document.querySelector ? document.querySelector('.err.on') : null;
+    if (first && first.scrollIntoView) { first.scrollIntoView(); }
+    return;
+  }
+
+  var nom  = document.getElementById('stagiaire').value.replace(/^\s+|\s+$/g,'');
+  var date = document.getElementById('date-livraison').value.replace(/^\s+|\s+$/g,'');
+  var om   = document.getElementById('code-om').value.replace(/^\s+|\s+$/g,'');
+  var tel  = document.getElementById('tel-client').value.replace(/^\s+|\s+$/g,'');
+  var lieu = document.getElementById('lieu').value.replace(/^\s+|\s+$/g,'');
+  var nts  = document.getElementById('notes').value.replace(/^\s+|\s+$/g,'');
+  var ref  = 'BL-' + padNum(compteur);
+
+  /* Produits selectionnes */
+  var prods = [];
+  var total = 0;
+  for (var i = 0; i < PRODUITS.length; i++) {
+    if (qtys[i] > 0) {
+      var st = PRODUITS[i].prix * qtys[i];
+      prods.push({nom: PRODUITS[i].nom, qty: qtys[i], prix: PRODUITS[i].prix, sous: st});
+      total += st;
+    }
+  }
+
+  /* ---- RECAP HTML ---- */
+  var rows = [
+    ['Reference', ref],
+    ['Date', date],
+    ['Stagiaire', nom],
+    ['Code OM', om],
+    ['Tel client', tel],
+    ['Heure', heure],
+    ['Lieu', lieu]
+  ];
+  if (nts) rows.push(['Notes', nts]);
+
+  var rhtml = '';
+  for (var r = 0; r < rows.length; r++) {
+    rhtml += '<div class="recap-row clearfix">';
+    rhtml += '<div class="recap-key">' + rows[r][0] + '</div>';
+    rhtml += '<div class="recap-val">' + rows[r][1] + '</div>';
+    rhtml += '</div>';
+  }
+  /* Produits dans recap */
+  rhtml += '<div class="recap-row clearfix"><div class="recap-key">Produits</div><div class="recap-val">';
+  for (var p = 0; p < prods.length; p++) {
+    rhtml += prods[p].nom + ' x' + prods[p].qty + ' = ' + fmt(prods[p].sous) + ' FCFA<br>';
+  }
+  rhtml += '</div></div>';
+  document.getElementById('recap-content').innerHTML = rhtml;
+  document.getElementById('recap-total').innerHTML = fmt(total) + ' FCFA';
+
+  /* ---- TEXTE BON (plain text, sans emoji problematiques) ---- */
+  var t = '';
+  t += 'BON DE LIVRAISON TAHCURE\n';
+  t += 'Ref : ' + ref + '\n';
+  t += '--------------------------------\n';
+  t += 'Date      : ' + date + '\n';
+  t += 'Stagiaire : ' + nom + '\n';
+  t += 'Code OM   : ' + om + '\n';
+  t += 'Client    : ' + tel + '\n';
+  t += 'Heure     : ' + heure + '\n';
+  t += 'Lieu      : ' + lieu + '\n';
+  if (nts) t += 'Notes     : ' + nts + '\n';
+  t += '--------------------------------\n';
+  t += 'PRODUITS :\n';
+  for (var p2 = 0; p2 < prods.length; p2++) {
+    t += '- ' + prods[p2].nom + ' x' + prods[p2].qty + ' = ' + fmt(prods[p2].sous) + ' FCFA\n';
+  }
+  t += '--------------------------------\n';
+  t += 'TOTAL : ' + fmt(total) + ' FCFA\n';
+  t += '--------------------------------\n';
+  t += 'TAHCURE SARL | tahcure.com\n';
+  t += 'WhatsApp : 640 47 20 50\n';
+  t += 'Orange Money : 102 73 84';
+
+  bonTxt = t;
+
+  /* Remplir le textarea — solution PRINCIPALE de copie */
+  document.getElementById('bon-textarea').value = t;
+
+  /* Afficher recap */
+  document.getElementById('recap').className = 'recap on';
+
+  /* Scroll vers le recap */
+  var rec = document.getElementById('recap');
+  if (rec.scrollIntoView) { rec.scrollIntoView(); }
+
+  /* Sauver compteur */
+  try { localStorage.setItem('tahcure_cpt', '' + compteur); } catch(e) {}
+}
+
+/* ---- COPIE ---- */
+function copier() {
+  if (!bonTxt) return;
+  var btn = document.getElementById('btn-copy');
+
+  /* Selectionner le textarea et copier */
+  var ta = document.getElementById('bon-textarea');
+  ta.focus();
+  ta.select();
+  try { ta.setSelectionRange(0, 99999); } catch(e) {}
+
+  var ok = false;
+
+  /* Methode 1 : clipboard moderne */
+  if (window.navigator && navigator.clipboard && navigator.clipboard.writeText) {
+    try {
+      navigator.clipboard.writeText(bonTxt).then(function() {
+        btn.innerHTML = 'Copie !';
+        btn.className = 'btn-copy done';
+        setTimeout(function() {
+          btn.innerHTML = 'Copier le bon';
+          btn.className = 'btn-copy';
+        }, 3000);
+      }).catch(function() { copierFallback(btn); });
+      return;
+    } catch(e) {}
+  }
+
+  /* Methode 2 : execCommand */
+  try { ok = document.execCommand('copy'); } catch(e) {}
+
+  if (ok) {
+    btn.innerHTML = 'Copie !';
+    btn.className = 'btn-copy done';
+    setTimeout(function() {
+      btn.innerHTML = 'Copier le bon';
+      btn.className = 'btn-copy';
+    }, 3000);
+  } else {
+    /* Methode 3 : le textarea est deja visible et selectionne — guider l'utilisateur */
+    btn.innerHTML = 'Appuyez longt. sur le texte puis Copier';
+    setTimeout(function() {
+      btn.innerHTML = 'Copier le bon';
+    }, 4000);
+  }
+}
+
+/* ---- NOUVEAU BON ---- */
+function nouveau() {
+  compteur++;
+  document.getElementById('bon-ref').innerHTML = 'BL-' + padNum(compteur);
+
+  /* Reset champs */
+  var ids = ['stagiaire','code-om','tel-client','lieu','notes'];
+  for (var i = 0; i < ids.length; i++) {
+    document.getElementById(ids[i]).value = '';
+  }
+
+  /* Reset date */
+  var d = new Date();
+  var j = d.getDate(); var m = d.getMonth()+1; var a = d.getFullYear();
+  document.getElementById('date-livraison').value =
+    (j<10?'0'+j:j)+'/'+(m<10?'0'+m:m)+'/'+a;
+
+  /* Reset quantites */
+  for (var i2 = 0; i2 < PRODUITS.length; i2++) {
+    qtys[i2] = 0;
+    rafraichirProd(i2);
+  }
+
+  /* Reset chips */
+  var chips = document.getElementById('chips').childNodes;
+  for (var c = 0; c < chips.length; c++) {
+    if (chips[c].className) {
+      chips[c].className = chips[c].className.replace(' on','').replace('on','');
+    }
+  }
+  heure = '';
+
+  /* Reset erreurs */
+  var errs = document.getElementsByClassName('err');
+  for (var e = 0; e < errs.length; e++) { errs[e].className = 'err'; }
+
+  /* Reset total */
+  document.getElementById('total-amount').innerHTML = '0';
+  document.getElementById('total-count').innerHTML = '0 article';
+
+  /* Cacher recap */
+  document.getElementById('recap').className = 'recap';
+  bonTxt = '';
+
+  /* Remonter en haut */
+  window.scrollTo(0, 0);
+}
+</script>
+</body>
+</html>
